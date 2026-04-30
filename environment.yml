@@ -1,0 +1,34 @@
+name: ll4ma
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9  # Or 3.10, conda-forge will handle both safely
+  - pip
+  - numpy<2.0
+  - scipy
+  - pandas
+  - matplotlib
+  - scikit-learn
+  - scikit-image
+  - python-orocos-kdl
+  - ompl
+  - fcl
+  - catkin_pkg
+  - rospkg
+  # MOVE problematic C++ packages here to be handled by Conda:
+  - pybullet
+  - open3d 
+  - pip:
+    - trimesh
+    - urdfpy
+    - tensorboard
+    - absl-py
+    - loguru
+    - pexpect
+    - pyquaternion
+    - config-path
+    - setuptools_scm
+    - tqdm
+    - addict
+    - timm
