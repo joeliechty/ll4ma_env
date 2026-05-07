@@ -5,7 +5,7 @@ echo "Starting ll4ma environment setup..."
 
 # 1. Create or update the Conda environment
 echo "Creating/updating conda environment 'll4ma' from environment.yml..."
-conda env update -f environment.yml --prune
+conda env update -f environment.yml --prune --solver=libmamba
 
 # 2. Activate the Conda environment
 echo "Activating 'll4ma' environment..."

@@ -1,7 +1,7 @@
 name: ll4ma
 channels:
   - conda-forge
-  - defaults
+  - nodefaults
 dependencies:
   - python=3.9  # Or 3.10, conda-forge will handle both safely
   - pip
