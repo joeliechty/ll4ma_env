@@ -5,7 +5,16 @@ echo "Starting ll4ma environment setup..."
 
 # 1. Create or update the Conda environment
 echo "Creating/updating conda environment 'll4ma' from environment.yml..."
-conda env update -f environment.yml --prune
+NEW_SUM=$(md5sum environment.yml | cut -d ' ' -f 1)
+OLD_SUM=$([ -f .env_checksum ] && cat .env_checksum || echo "")
+
+if [ "$NEW_SUM" != "$OLD_SUM" ]; then
+    echo "Changes detected in environment.yml. Updating..."
+    conda env update -f environment.yml --prune
+    echo "$NEW_SUM" > .env_checksum
+else
+    echo "environment.yml is unchanged. Skipping update to save time."
+fi
 
 # 2. Activate the Conda environment
 echo "Activating 'll4ma' environment..."
