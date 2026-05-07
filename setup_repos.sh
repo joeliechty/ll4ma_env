@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define the target directory
-TARGET_DIR="$HOME/git_repos"
+TARGET_DIR="$HOME/git_repos/ll4ma"
 
 # List of repository URLs
 REPOS=(

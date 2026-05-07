@@ -52,7 +52,8 @@ EOF
 elif [ "$OS" = "Linux" ]; then
     # ... your existing Linux CUDA install logic ...
     # On Linux, we install the real version with CUDA support:
-    pip install torch-scatter -f https://data.pyg.org/whl/torch-2.2.0+cu118.html
+    pip install --force-reinstall --no-deps torch-scatter -f https://data.pyg.org/whl/torch-2.8.0+cu128.html
+    pip install spconv-cu126
 fi
 
 # 4. Bypass ROS setup.py using a .pth file
@@ -65,7 +66,7 @@ SITE_PACKAGES=$(python -c "import site; print(site.getsitepackages()[0])")
 PTH_FILE="$SITE_PACKAGES/ll4ma.pth"
 
 # Get the current working directory (assuming you run this from your git workspace root)
-REPO_DIR="$HOME/git_repos"
+REPO_DIR="$HOME/git_repos/ll4ma"
 
 # Write the path to the actual python source directory directly into the environment
 echo "$REPO_DIR/ll4ma_util/src" > "$PTH_FILE"
