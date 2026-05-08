@@ -73,6 +73,7 @@ echo "$REPO_DIR/ll4ma_util/src" > "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_relation/src" >> "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_tamp/blind_grasping/src" >> "$PTH_FILE"
 echo "$REPO_DIR/multisensory_learning/src" >> "$PTH_FILE"
+echo "$REPO_DIR/ll4ma_isaac" >> "$PTH_FILE"
 
 # If you have other packages in this workspace that also fail to install, 
 # you can link them identically by uncommenting/adding lines below:

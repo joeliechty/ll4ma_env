@@ -37,6 +37,7 @@ echo "$REPO_DIR/ll4ma_util/src" > "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_relation/src" >> "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_tamp/blind_grasping/src" >> "$PTH_FILE"
 echo "$REPO_DIR/multisensory_learning/src" >> "$PTH_FILE"
+echo "$REPO_DIR/ll4ma_isaac" >> "$PTH_FILE"
 
 echo "==========================================================="
 echo "Installation complete!"
