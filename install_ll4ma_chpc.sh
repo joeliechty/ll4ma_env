@@ -26,7 +26,7 @@ conda activate ll4ma
 
 # 3. CHPC is Linux/CUDA only — install real torch-scatter with CUDA support
 echo "Installing torch-scatter (CUDA, Linux/CHPC)..."
-pip install torch-scatter -f https://data.pyg.org/whl/torch-2.2.0+cu118.html
+python -m pip install torch-scatter -f https://data.pyg.org/whl/torch-2.2.0+cu118.html
 
 # 4. Link ll4ma packages via .pth file (bypasses ROS/Catkin setup.py)
 echo "Linking ll4ma packages via Python (.pth files)..."
@@ -37,7 +37,33 @@ echo "$REPO_DIR/ll4ma_util/src" > "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_relation/src" >> "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_tamp/blind_grasping/src" >> "$PTH_FILE"
 echo "$REPO_DIR/multisensory_learning/src" >> "$PTH_FILE"
-echo "$REPO_DIR/ll4ma_isaac" >> "$PTH_FILE"
+echo "$REPO_DIR/ll4ma_isaac/ll4ma_isaacgym/src" >> "$PTH_FILE"
+echo "$REPO_DIR/distribution_planning/src" >> "$PTH_FILE"
+
+# Stub ROS modules so ll4ma_util.ros_util imports without ROS installed.
+# (Training pipeline only needs pure-Python helpers from this module.)
+echo "Installing ROS module stubs (rospy, rospkg, message packages)..."
+cat << 'PYEOF' > "$SITE_PACKAGES/ll4ma_ros_stubs.py"
+"""Stub ROS modules for non-ROS conda installs (ll4ma)."""
+import sys
+from unittest.mock import MagicMock
+
+_STUBS = [
+    "rospy", "rospkg",
+    "ros_numpy", "ros_numpy.point_cloud2",
+    "std_srvs", "std_srvs.srv",
+    "sensor_msgs", "sensor_msgs.msg",
+    "geometry_msgs", "geometry_msgs.msg",
+    "visualization_msgs", "visualization_msgs.msg",
+    "tf2_msgs", "tf2_msgs.msg",
+    "moveit_msgs", "moveit_msgs.msg",
+    "std_msgs", "std_msgs.msg",
+    "trajectory_msgs", "trajectory_msgs.msg",
+]
+for _m in _STUBS:
+    sys.modules.setdefault(_m, MagicMock())
+PYEOF
+echo "import ll4ma_ros_stubs" > "$SITE_PACKAGES/ll4ma_ros_stubs.pth"
 
 echo "==========================================================="
 echo "Installation complete!"

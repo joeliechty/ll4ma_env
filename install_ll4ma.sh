@@ -26,7 +26,7 @@ echo "Detecting Operating System for hardware-specific installations..."
 OS="$(uname)"
 if [ "$OS" = "Darwin" ]; then
     echo "macOS detected. Installing PyTorch (MPS)..."
-    pip install torch torchvision torchaudio
+    python -m pip install torch torchvision torchaudio
     
     echo "Injecting dummy modules for macOS compatibility..."
     SITE_PACKAGES=$(python -c "import site; print(site.getsitepackages()[0])")
@@ -52,8 +52,8 @@ EOF
 elif [ "$OS" = "Linux" ]; then
     # ... your existing Linux CUDA install logic ...
     # On Linux, we install the real version with CUDA support:
-    pip install --force-reinstall --no-deps torch-scatter -f https://data.pyg.org/whl/torch-2.8.0+cu128.html
-    pip install spconv-cu126
+    python -m pip install --force-reinstall --no-deps torch-scatter -f https://data.pyg.org/whl/torch-2.8.0+cu128.html
+    python -m pip install spconv-cu126
 fi
 
 # 4. Bypass ROS setup.py using a .pth file
@@ -73,7 +73,33 @@ echo "$REPO_DIR/ll4ma_util/src" > "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_relation/src" >> "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_tamp/blind_grasping/src" >> "$PTH_FILE"
 echo "$REPO_DIR/multisensory_learning/src" >> "$PTH_FILE"
-echo "$REPO_DIR/ll4ma_isaac" >> "$PTH_FILE"
+echo "$REPO_DIR/ll4ma_isaac/ll4ma_isaacgym/src" >> "$PTH_FILE"
+echo "$REPO_DIR/distribution_planning/src" >> "$PTH_FILE"
+
+# Stub ROS modules so ll4ma_util.ros_util imports without ROS installed.
+# (Training pipeline only needs pure-Python helpers from this module.)
+echo "Installing ROS module stubs (rospy, rospkg, message packages)..."
+cat << 'PYEOF' > "$SITE_PACKAGES/ll4ma_ros_stubs.py"
+"""Stub ROS modules for non-ROS conda installs (ll4ma)."""
+import sys
+from unittest.mock import MagicMock
+
+_STUBS = [
+    "rospy", "rospkg",
+    "ros_numpy", "ros_numpy.point_cloud2",
+    "std_srvs", "std_srvs.srv",
+    "sensor_msgs", "sensor_msgs.msg",
+    "geometry_msgs", "geometry_msgs.msg",
+    "visualization_msgs", "visualization_msgs.msg",
+    "tf2_msgs", "tf2_msgs.msg",
+    "moveit_msgs", "moveit_msgs.msg",
+    "std_msgs", "std_msgs.msg",
+    "trajectory_msgs", "trajectory_msgs.msg",
+]
+for _m in _STUBS:
+    sys.modules.setdefault(_m, MagicMock())
+PYEOF
+echo "import ll4ma_ros_stubs" > "$SITE_PACKAGES/ll4ma_ros_stubs.pth"
 
 # If you have other packages in this workspace that also fail to install, 
 # you can link them identically by uncommenting/adding lines below:

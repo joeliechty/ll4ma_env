@@ -32,3 +32,4 @@ dependencies:
     - tqdm
     - addict
     - timm
+    - torcheval

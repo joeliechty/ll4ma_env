@@ -10,6 +10,7 @@ REPOS=(
     "git@bitbucket.org:robot-learning/ll4ma_tamp.git"
     "git@bitbucket.org:robot-learning/ll4ma_relation.git"
     "git@bitbucket.org:robot-learning/ll4ma_isaac.git"
+    "git@bitbucket.org:robot-learning/distribution_planning.git"
 )
 
 # Helper function to run commands and exit on failure
@@ -50,6 +51,9 @@ for REPO_URL in "${REPOS[@]}"; do
             ;;
         "ll4ma_util")
             TARGET_BRANCH="joe_fmt"
+            ;;
+        "ll4ma_isaac")
+            TARGET_BRANCH="sy_container_tactile"
             ;;
     esac
 
