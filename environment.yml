@@ -18,7 +18,7 @@ dependencies:
   - rospkg
   # MOVE problematic C++ packages here to be handled by Conda:
   - pybullet
-  - open3d 
+  - open3d
   - pip:
     - trimesh
     - urdfpy
