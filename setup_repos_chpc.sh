@@ -10,6 +10,7 @@ REPOS=(
     "git@bitbucket.org:robot-learning/ll4ma_relation.git"
     "git@bitbucket.org:robot-learning/ll4ma_isaac.git"
     "git@bitbucket.org:robot-learning/distribution_planning.git"
+    "git@bitbucket.org:robot-learning/ll4ma-opt-sandbox.git"
 )
 
 run_git_task() {

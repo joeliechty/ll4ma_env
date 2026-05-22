@@ -4,7 +4,8 @@ set -e
 echo "Starting ll4ma environment setup (CHPC)..."
 
 REPO_DIR="/scratch/general/vast/$USER/latent_dynamics"
-ENVS_DIR="/scratch/general/vast/$USER/conda_envs"
+# ENVS_DIR="/scratch/general/vast/$USER/conda_envs"
+ENVS_DIR="$HOME/.conda/envs"  # default CHPC home dir location
 ENV_PREFIX="$ENVS_DIR/ll4ma"
 
 # Ensure scratch envs dir exists and is registered with conda so `conda activate ll4ma`
@@ -38,6 +39,19 @@ fi
 echo "Activating 'll4ma' environment..."
 eval "$(conda shell.bash hook)"
 conda activate "$ENV_PREFIX"
+
+# 2a. Install a conda activation hook that prepends $CONDA_PREFIX/lib to
+# LD_LIBRARY_PATH. RHEL 8's /lib64/libstdc++.so.6 only ships GLIBCXX_3.4.25,
+# but scipy/open3d wheels need 3.4.29+. The env's own libstdc++ has the new
+# symbols; this hook makes sure the dynamic linker finds it first.
+ACTIVATE_D="$ENV_PREFIX/etc/conda/activate.d"
+mkdir -p "$ACTIVATE_D"
+cat > "$ACTIVATE_D/00_libstdcxx.sh" << 'EOF'
+# Auto-installed by install_ll4ma_chpc.sh — see comment there for rationale.
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+EOF
+# Apply to the current shell as well so subsequent build steps see the new lib.
+export LD_LIBRARY_PATH="$CONDA_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
 # 3. CHPC is Linux/CUDA only — install torch-scatter and spconv with CUDA support.
 # CHPC compute nodes run Rocky/RHEL 8 (glibc 2.28), but PyG's recent torch_scatter
@@ -90,6 +104,7 @@ echo "$REPO_DIR/ll4ma_tamp/blind_grasping/src" >> "$PTH_FILE"
 echo "$REPO_DIR/multisensory_learning/src" >> "$PTH_FILE"
 echo "$REPO_DIR/ll4ma_isaac/ll4ma_isaacgym/src" >> "$PTH_FILE"
 echo "$REPO_DIR/distribution_planning/src" >> "$PTH_FILE"
+echo "$REPO_DIR/ll4ma-opt-sandbox/src" >> "$PTH_FILE"
 
 # Stub ROS modules so ll4ma_util.ros_util imports without ROS installed.
 # (Training pipeline only needs pure-Python helpers from this module.)

@@ -18,7 +18,9 @@ dependencies:
   - rospkg
   # MOVE problematic C++ packages here to be handled by Conda:
   - pybullet
-  - open3d
+  # NOTE: open3d is NOT here — conda-forge only ships open3d 0.18.0 for py>=3.10,
+  # and the pip "open3d-cpu" wheel that some viser releases pulled in lacks
+  # `visualization.rendering` (OffscreenRenderer). Pin the full pip wheel below.
   - pip:
     - trimesh
     - urdfpy
@@ -33,3 +35,5 @@ dependencies:
     - addict
     - timm
     - torcheval
+    - viser
+    - open3d==0.18.0  # full wheel: includes visualization.rendering.OffscreenRenderer
